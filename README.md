@@ -1,7 +1,13 @@
-# ele-me-web-extend
+# 饿了么订单网页插件
 
-面向 Chrome 的饿了么订单网页插件…… 帮你算出每个人要付多少，能统计餐盒、红包等费用。
-在收藏夹中新增一个网页，将网址设为下面的完整代码。然后打开任一订单页面（需已下单），接着直接在收藏夹点击刚刚收藏的网址即可。
+![image](https://cloud.githubusercontent.com/assets/1503156/22875717/2e1da55e-f208-11e6-83cf-5229ed1fd017.png)
+
+面向 Chrome 的饿了么订单网页插件…… 帮你算出每个人要付多少，能统计餐盒、红包等费用。<br>
+图中的红框部分是插件生成的，包含每用户的详单，还有最后的小结。（小结部分可手工复制或截图，方便发起者转发给其它人）
+
+插件安装方法：<br>
+参考 https://jareguo.github.io/ele-me-web-extend/ 中的方式进行，如果无效的话，也可以手工注册：<br>
+在浏览器收藏夹中新建一个网址，将网址设为下面的完整代码。然后打开任一订单页面（需已下单），接着直接在收藏夹点击刚刚收藏的网址即可。
 
 ```js
 javascript:(function () {
@@ -18,6 +24,9 @@ javascript:(function () {
 
     function getEls () {
         rootEl = document.body.querySelector('div.spell-items');
+        if (rootEl.childElementCount === 0) {
+            throw err('无法解析内容，因为订单已完成');
+        }
         customerEls = rootEl.querySelectorAll('section');
         if (customerEls.length === 0) {
             throw err('找不到用户元素');
@@ -31,8 +40,8 @@ javascript:(function () {
         }
         totalEl = rootEl.querySelector('div.spell-total > span');
         if (!totalEl) {
-            // <div class="spell-total">
-            // 5人，32份商品<span>合计 ¥83.05</span></div>
+            /* <div class="spell-total">
+               5人，32份商品<span>合计 ¥83.05</span></div> */
             throw err('找不到"合计"所在元素，订单可能已完成');
         }
 
@@ -48,8 +57,10 @@ javascript:(function () {
         }
         items[0].innerHTML = title;
         items[1].innerText = unit;
-        items[1].style.width = '3rem';
         items[2].innerText = Yuan + cost;
+        items[0].style.cssText = items[2].style.cssText =
+            'user-select: text; -webkit-user-select: text;';
+        items[1].style.width = '3rem';
         parent.appendChild(newEl);
     }
     function diplayCustomerCost (el, feePerCustomer, cost, rate, discountedCost) {
@@ -93,15 +104,15 @@ javascript:(function () {
     }
     function computeTotal () {
         var { fee, discount } = sumFee(otherFee);
-        // 1. 实付 / (实付 + 优惠)，算出折扣
+        /* 1. 实付 / (实付 + 优惠)，算出折扣 */
         var total = getCost(totalEl);
         rate = total / (total + discount);
-        // 2. 把其它支出费用均摊到每用户
+        /* 2. 把其它支出费用均摊到每用户 */
         feePerCustomer = fee / customerEls.length;
     }
 
     function parseCustomers () {
-        // 3. 每用户应付 * 折扣，算出每用户实付
+        /* 3. 每用户应付 * 折扣，算出每用户实付 */
         customerEls.forEach((x) => {
             var { fee, discount } = sumFee(x);
             var cost = (fee - discount + feePerCustomer);
