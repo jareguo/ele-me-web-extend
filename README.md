@@ -22,6 +22,12 @@ javascript:(function () {
         return new Error(text);
     }
 
+    function appendFooter () {
+        var footer = document.createElement('span');
+        footer.innerHTML = '<a href="https://jareguo.github.io/ele-me-web-extend/" target="_blank">当前插件版本 1.1</a>';
+        document.body.appendChild(footer);
+    }
+
     function getEls () {
         rootEl = document.body.querySelector('div.spell-items');
         if (rootEl.childElementCount === 0) {
@@ -51,9 +57,20 @@ javascript:(function () {
     }
     function addEntry (parent, template, title, unit, cost) {
         var newEl = template.cloneNode(true);
-        var items = newEl.querySelectorAll('span');
-        if (items.length < 3) {
-            throw err('找不到单元格');
+        var items;
+        if (newEl.childElementCount === 3) {
+            items = newEl.querySelectorAll('span');
+            if (items.length < 3) {
+                debugger;
+                throw err('找不到单元格');
+            }
+        }
+        else {
+            items = newEl.querySelector('span:last-child').querySelectorAll('span');
+            if (items.length !== 2) {
+                throw err('找不到单元格');
+            }
+            items = [newEl.querySelector('span:first-child'), items[0], items[1]];
         }
         items[0].innerHTML = title;
         items[1].innerText = unit;
@@ -61,16 +78,8 @@ javascript:(function () {
         items[0].style.cssText = items[2].style.cssText =
             'user-select: text; -webkit-user-select: text;';
         items[1].style.width = '3rem';
+        items[1].style.display = 'inline';
         parent.appendChild(newEl);
-    }
-    function diplayCustomerCost (el, feePerCustomer, cost, rate, discountedCost) {
-        var newUl = document.createElement('ul');
-        newUl.classList = el.querySelector('ul').classList;
-        var template = el.querySelector('li');
-        addEntry(newUl, template, '餐盒配送', '人均', feePerCustomer);
-        addEntry(newUl, template, '合计', '', cost);
-        addEntry(newUl, template, '<b>折后价</b>', 'x' + (rate).toFixed(2), (discountedCost).toFixed(2));
-        el.appendChild(newUl);
     }
     function getTitleEl (el) {
         return el.querySelector('header span:last-child');
@@ -118,8 +127,13 @@ javascript:(function () {
             var cost = (fee - discount + feePerCustomer);
             var discountedCost = cost * rate;
             console.log(discountedCost);
-
-            diplayCustomerCost(x, feePerCustomer, cost, rate, discountedCost);
+            var newUl = x.querySelector('ul').cloneNode('true');
+            newUl.innerHTML = '';
+            var liTemplate = x.querySelector('li');
+            addEntry(newUl, liTemplate, '餐盒配送', '人均', feePerCustomer);
+            addEntry(newUl, liTemplate, '合计', '', cost);
+            addEntry(newUl, liTemplate, '<b>折后价</b>', 'x' + (rate).toFixed(2), (discountedCost).toFixed(2));
+            x.appendChild(newUl);
 
             customers.push({
                 name: getTitleEl(x).innerText,
@@ -152,8 +166,14 @@ javascript:(function () {
         computeTotal();
         parseCustomers();
         displaySubtotal();
+        appendFooter();
         window.elemePluginExecuted = true;
     }
     main();
 })();
 ```
+
+<hr>
+
+[编辑此页](https://github.com/jareguo/ele-me-web-extend/edit/master/README.md)<br>
+[encodeURI online](http://pressbin.com/tools/urlencode_urldecode/)
