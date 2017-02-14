@@ -176,4 +176,5 @@ javascript:(function () {
 <hr>
 
 [编辑此页](https://github.com/jareguo/ele-me-web-extend/edit/master/README.md)<br>
+[编辑网页](https://github.com/jareguo/ele-me-web-extend/edit/master/_layouts/default.html)<br>
 [encodeURI online](http://pressbin.com/tools/urlencode_urldecode/)
