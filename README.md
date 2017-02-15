@@ -12,6 +12,7 @@
 ```js
 javascript:(function () {
     var Yuan = '¥';
+    var Credit = '当前插件版本 1.1.1';
     var rootEl, customerEls, otherFee, totalEl;
     var feePerCustomer, rate;
     var customers = [];
@@ -24,7 +25,7 @@ javascript:(function () {
 
     function appendFooter () {
         var footer = document.createElement('span');
-        footer.innerHTML = '<a href="https://jareguo.github.io/ele-me-web-extend/" target="_blank">当前插件版本 1.1</a>';
+        footer.innerHTML = '<a href="https://jareguo.github.io/ele-me-web-extend/" target="_blank">' + Credit + '</a>';
         document.body.appendChild(footer);
     }
 
@@ -156,6 +157,11 @@ javascript:(function () {
             addEntry(ul, li, name, '折后价', cost.toFixed(2));
         });
         rootEl.insertBefore(newItem, otherFee.nextSibling);
+        /* 移除 [和Ta点一样] */
+        var followEl = newItem.querySelector('header>div:last-child');
+        if (followEl) {
+            followEl.remove();
+        }
     }
 
     function main () {
