@@ -12,7 +12,7 @@
 ```js
 javascript:(function () {
     var Yuan = '¥';
-    var Credit = '当前插件版本 1.1.1';
+    var Credit = '当前插件版本 1.1.2';
     var rootEl, customerEls, otherFee, totalEl;
     var feePerCustomer, rate;
     var customers = [];
@@ -83,7 +83,8 @@ javascript:(function () {
         parent.appendChild(newEl);
     }
     function getTitleEl (el) {
-        return el.querySelector('header span:last-child');
+        var spans = el.querySelectorAll('header span');
+        return spans[spans.length - 1];
     }
     function getCost (el) {
         var text = el.innerText.split(Yuan).splice(-1)[0];
