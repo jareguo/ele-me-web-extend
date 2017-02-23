@@ -62,7 +62,6 @@ javascript:(function () {
         if (newEl.childElementCount === 3) {
             items = newEl.querySelectorAll('span');
             if (items.length < 3) {
-                debugger;
                 throw err('找不到单元格');
             }
         }
@@ -126,14 +125,14 @@ javascript:(function () {
         /* 3. 每用户应付 * 折扣，算出每用户实付 */
         customerEls.forEach((x) => {
             var { fee, discount } = sumFee(x);
-            var cost = (fee - discount + feePerCustomer);
+            var cost = fee - discount + feePerCustomer;
             var discountedCost = cost * rate;
             console.log(discountedCost);
             var newUl = x.querySelector('ul').cloneNode('true');
             newUl.innerHTML = '';
             var liTemplate = x.querySelector('li');
-            addEntry(newUl, liTemplate, '餐盒配送', '人均', feePerCustomer);
-            addEntry(newUl, liTemplate, '合计', '', cost);
+            addEntry(newUl, liTemplate, '餐盒配送', '人均', feePerCustomer.toFixed(2));
+            addEntry(newUl, liTemplate, '合计', '', cost.toFixed(2));
             addEntry(newUl, liTemplate, '<b>折后价</b>', 'x' + (rate).toFixed(2), (discountedCost).toFixed(2));
             x.appendChild(newUl);
 
