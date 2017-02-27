@@ -12,7 +12,7 @@
 ```js
 javascript:(function () {
     var Yuan = '¥';
-    var Credit = '当前插件版本 1.1.2';
+    var Credit = '当前插件版本 1.1.3';
     var rootEl, customerEls, otherFee, totalEl;
     var feePerCustomer, rate;
     var customers = [];
@@ -87,7 +87,7 @@ javascript:(function () {
     }
     function getCost (el) {
         var text = el.innerText.split(Yuan).splice(-1)[0];
-        var cost = parseInt(text);
+        var cost = parseFloat(text);
         if (isNaN(cost)) {
             throw err('获取金额失败');
         }
@@ -123,7 +123,7 @@ javascript:(function () {
 
     function parseCustomers () {
         /* 3. 每用户应付 * 折扣，算出每用户实付 */
-        customerEls.forEach((x) => {
+        customerEls.forEach(x => {
             var { fee, discount } = sumFee(x);
             var cost = fee - discount + feePerCustomer;
             var discountedCost = cost * rate;
