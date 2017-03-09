@@ -55,7 +55,7 @@ javascript:(function () {
 
     }
     function getCostEls (el) {
-        return el.querySelectorAll('li>:first-child');
+        return el.querySelectorAll('li>:first-child>:last-child');
     }
     function addEntry (parent, template, title, unit, cost) {
         var newEl = template.cloneNode(true);
