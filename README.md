@@ -13,7 +13,7 @@
 ```js
 javascript:(function () {
     var Yuan = '¥';
-    var Credit = '当前插件版本 1.1.3';
+    var Credit = '当前插件版本 1.1.4';
     var rootEl, customerEls, otherFee, totalEl;
     var feePerCustomer, rate;
     var customers = [];
@@ -55,23 +55,14 @@ javascript:(function () {
 
     }
     function getCostEls (el) {
-        return el.querySelectorAll('li>:last-child');
+        return el.querySelectorAll('li>:first-child');
     }
     function addEntry (parent, template, title, unit, cost) {
         var newEl = template.cloneNode(true);
         var items;
-        if (newEl.childElementCount === 3) {
-            items = newEl.querySelectorAll('span');
-            if (items.length < 3) {
-                throw err('找不到单元格');
-            }
-        }
-        else {
-            items = newEl.querySelector('span:last-child').querySelectorAll('span');
-            if (items.length !== 2) {
-                throw err('找不到单元格');
-            }
-            items = [newEl.querySelector('span:first-child'), items[0], items[1]];
+        items = newEl.querySelectorAll('span');
+        if (items.length < 3) {
+            throw err('找不到单元格');
         }
         items[0].innerHTML = title;
         items[1].innerText = unit;
