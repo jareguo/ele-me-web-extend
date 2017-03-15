@@ -13,7 +13,7 @@
 ```js
 javascript:(function () {
     var Yuan = '¥';
-    var Credit = '当前插件版本 1.1.4';
+    var Credit = '当前插件版本 1.1.5';
     var rootEl, customerEls, otherFee, totalEl;
     var feePerCustomer, rate;
     var customers = [];
@@ -114,7 +114,7 @@ javascript:(function () {
     }
 
     function parseCustomers () {
-        /* 3. 每用户应付 * 折扣，算出每用户实付 */
+        /* 3. 每用户应付 x 折扣，算出每用户实付 */
         customerEls.forEach(x => {
             var { fee, discount } = sumFee(x);
             var cost = fee - discount + feePerCustomer;
@@ -122,7 +122,11 @@ javascript:(function () {
             console.log(discountedCost);
             var newUl = x.querySelector('ul').cloneNode('true');
             newUl.innerHTML = '';
-            var liTemplate = x.querySelector('li');
+            var liTemplate = x.querySelector('li').cloneNode('true');
+                var liChildren = liTemplate.children;
+                for (var i = liChildren.length - 1; i >= 1; i--) {
+                    liChildren[i].remove();
+                }
             addEntry(newUl, liTemplate, '餐盒配送', '人均', feePerCustomer.toFixed(2));
             addEntry(newUl, liTemplate, '合计', '', cost.toFixed(2));
             addEntry(newUl, liTemplate, '<b>折后价</b>', 'x' + (rate).toFixed(2), (discountedCost).toFixed(2));
